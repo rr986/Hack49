@@ -1,56 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, Alert, FlatList } from 'react-native';
-import { checkPolypharmacyRisks } from '../services/PrescriptionValidationService';
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, Alert } from 'react-native';
+import { validatePrescriptionInput, customizePrescriptionForPatient } from '../services/PrescriptionValidationService';
+import globalStyles from '../styles';
 
-const PolypharmacyScreen = () => {
-  const [patientData, setPatientData] = useState({ drugs: [] });
-  const [polypharmacyRisk, setPolypharmacyRisk] = useState(null);
+const PrescriptionScreen = () => {
+  const [drug, setDrug] = useState('');
+  const [dose, setDose] = useState('');
+  const [age, setAge] = useState('');
+  const [kidneyFunction, setKidneyFunction] = useState('');
+  const [prescription, setPrescription] = useState({});
 
-  useEffect(() => {
-    // Simulate fetching patient drugs
-    const samplePatient = {
-      id: 1,
-      drugs: [
-        { name: 'Aspirin', dose: '100mg' },
-        { name: 'Warfarin', dose: '5mg' },
-        { name: 'Lisinopril', dose: '10mg' },
-      ],
-    };
-    setPatientData(samplePatient);
-  }, []);
-
-  const handleCheckPolypharmacy = async () => {
-    const result = await checkPolypharmacyRisks(patientData.drugs);
-    if (result.hasRisk) {
-      Alert.alert("Polypharmacy Risk", result.message);
+  const handleValidate = async () => {
+    const validationErrors = await validatePrescriptionInput({ drug, dose, age, kidneyFunction });
+    if (validationErrors.length) {
+      Alert.alert("Validation Errors", validationErrors.join("\n"));
     } else {
-      Alert.alert("Safe", "No polypharmacy risks detected.");
+      const customizedPrescription = await customizePrescriptionForPatient({ drug, dose, age, kidneyFunction });
+      setPrescription(customizedPrescription);
+      Alert.alert("Prescription Validated", `Customized Prescription: ${JSON.stringify(customizedPrescription)}`);
     }
-    setPolypharmacyRisk(result);
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Polypharmacy Check</Text>
-      <FlatList
-        data={patientData.drugs}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.drugCard}>
-            <Text>{item.name} - {item.dose}</Text>
-          </View>
-        )}
-      />
-      <Button title="Check for Polypharmacy Risks" onPress={handleCheckPolypharmacy} />
-      {polypharmacyRisk && <Text>{polypharmacyRisk.message}</Text>}
+    <View style={globalStyles.container}>
+      <TextInput placeholder="Drug" onChangeText={(text) => setDrug(text)} style={globalStyles.input} />
+      <TextInput placeholder="Dose" onChangeText={(text) => setDose(text)} style={globalStyles.input} />
+      <TextInput placeholder="Age" onChangeText={(text) => setAge(text)} style={globalStyles.input} />
+      <TextInput placeholder="Kidney Function" onChangeText={(text) => setKidneyFunction(text)} style={globalStyles.input} />
+      <Button title="Validate Prescription" onPress={handleValidate} />
+      {prescription && (
+        <View style={globalStyles.card}>
+          <Text>Drug: {prescription.drug}</Text>
+          <Text>Adjusted Dose: {prescription.adjustedDose}</Text>
+        </View>
+      )}
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 20 },
-  drugCard: { padding: 15, backgroundColor: '#f0f0f0', marginBottom: 10, borderRadius: 5 },
-});
-
-export default PolypharmacyScreen;
+export default PrescriptionScreen;

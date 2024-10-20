@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList } from 'react-native';
+import globalStyles from '../styles';
 
 const NotificationsScreen = () => {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    // Simulate fetching notifications from the backend or local storage
     const fetchNotifications = () => {
       const sampleNotifications = [
         { id: 1, message: 'Drug interaction alert: Aspirin and Warfarin' },
@@ -19,13 +19,13 @@ const NotificationsScreen = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Urgent Notifications</Text>
+    <View style={globalStyles.container}>
+      <Text style={globalStyles.title}>Urgent Notifications</Text>
       <FlatList
         data={notifications}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.notificationCard}>
+          <View style={globalStyles.card}>
             <Text>{item.message}</Text>
           </View>
         )}
@@ -33,11 +33,5 @@ const NotificationsScreen = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 20 },
-  notificationCard: { padding: 15, backgroundColor: '#f0f0f0', marginBottom: 10, borderRadius: 5 },
-});
 
 export default NotificationsScreen;

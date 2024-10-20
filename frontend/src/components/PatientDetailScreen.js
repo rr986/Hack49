@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, Button, ScrollView, Alert } from 'react-native';
 import { checkDrugInteractions } from '../services/DrugInteractionService';
 import { validatePrescriptionInput, customizePrescriptionForPatient } from '../services/PrescriptionValidationService';
 import { getPatientLabData } from '../services/LabMonitoringService';
+import globalStyles from '../styles';
 
 const PatientDetailScreen = ({ route }) => {
   const { patient } = route.params;
@@ -12,15 +13,12 @@ const PatientDetailScreen = ({ route }) => {
 
   useEffect(() => {
     const fetchPatientData = async () => {
-      // Fetch real-time drug interaction data
       const drugInteractionResult = await checkDrugInteractions(patient.drugs);
       setDrugInteractions(drugInteractionResult);
 
-      // Fetch prescription validation results
       const validationResult = await validatePrescriptionInput(patient.prescriptions);
       setPrescriptionValidation(validationResult);
 
-      // Fetch lab monitoring data
       const labResult = await getPatientLabData(patient.id);
       setLabData(labResult);
     };
@@ -28,13 +26,13 @@ const PatientDetailScreen = ({ route }) => {
   }, [patient]);
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>{patient.firstName} {patient.lastName}</Text>
+    <ScrollView style={globalStyles.container}>
+      <Text style={globalStyles.title}>{patient.firstName} {patient.lastName}</Text>
       <Text>Admit Reason: {patient.admitReason}</Text>
 
-      <Text style={styles.sectionTitle}>Drugs Currently Prescribed</Text>
+      <Text style={globalStyles.sectionTitle}>Drugs Currently Prescribed</Text>
       {patient.drugs.map((drug, index) => (
-        <View key={index} style={styles.drugCard}>
+        <View key={index} style={globalStyles.card}>
           <Text>{drug.name}</Text>
           <Text>Dosage: {drug.dose}</Text>
         </View>
@@ -45,13 +43,13 @@ const PatientDetailScreen = ({ route }) => {
         onPress={() => Alert.alert('Drug Interaction Results', JSON.stringify(drugInteractions))}
       />
 
-      <Text style={styles.sectionTitle}>Prescription Validation</Text>
+      <Text style={globalStyles.sectionTitle}>Prescription Validation</Text>
       <Button
         title="Validate Prescription"
         onPress={() => Alert.alert('Validation Results', JSON.stringify(prescriptionValidation))}
       />
 
-      <Text style={styles.sectionTitle}>Lab Monitoring Data</Text>
+      <Text style={globalStyles.sectionTitle}>Lab Monitoring Data</Text>
       {labData ? (
         <View>
           <Text>Lab Test: {labData.testName}</Text>
@@ -63,12 +61,5 @@ const PatientDetailScreen = ({ route }) => {
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 10 },
-  sectionTitle: { fontSize: 18, fontWeight: 'bold', marginTop: 20 },
-  drugCard: { padding: 15, backgroundColor: '#f0f0f0', marginBottom: 10, borderRadius: 5 },
-});
 
 export default PatientDetailScreen;

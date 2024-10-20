@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, FlatList, TouchableOpacity } from 'react-native';
 import { getHealthData } from '../services/HealthDataStorage';
+import globalStyles from '../styles';
 
 const PatientsScreen = ({ navigation }) => {
   const [patients, setPatients] = useState([]);
@@ -30,10 +31,10 @@ const PatientsScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Patients</Text>
+    <View style={globalStyles.container}>
+      <Text style={globalStyles.title}>Patients</Text>
       <TextInput
-        style={styles.searchInput}
+        style={globalStyles.input}
         placeholder="Search by name..."
         value={searchTerm}
         onChangeText={handleSearch}
@@ -43,7 +44,7 @@ const PatientsScreen = ({ navigation }) => {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => handlePatientPress(item)}>
-            <View style={styles.patientCard}>
+            <View style={globalStyles.card}>
               <Text>{item.firstName} {item.lastName}</Text>
               <Text>Admit Reason: {item.admitReason}</Text>
             </View>
@@ -53,12 +54,5 @@ const PatientsScreen = ({ navigation }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 10 },
-  searchInput: { marginBottom: 20, borderWidth: 1, borderColor: '#ccc', padding: 10, borderRadius: 5 },
-  patientCard: { padding: 15, backgroundColor: '#f0f0f0', marginBottom: 10, borderRadius: 5 },
-});
 
 export default PatientsScreen;

@@ -11,11 +11,3 @@ export const checkDrugInteractions = async (drugs) => {
     console.error("Error checking drug interactions", error);
   }
 };
-
-export const checkDrugInteractions = async (drugs) => {
-  // Simulated drug interaction check logic
-  if (drugs.includes('Aspirin') && drugs.includes('Warfarin')) {
-    return { hasInteraction: true, message: 'Aspirin and Warfarin have a known interaction. Please reconsider.' };
-  }
-  return { hasInteraction: false, message: 'No drug interactions detected.' };
-};
