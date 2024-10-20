@@ -70,72 +70,73 @@ const { width } = Dimensions.get('window');
 const isTablet = width > 768;
 
 const globalStyles = StyleSheet.create({
+  button: {
+    alignItems: 'center',
+    backgroundColor: '#3FA7D6',
+    borderRadius: 10,
+    marginTop: isTablet ? 20 : 10,
+    padding: isTablet ? 20 : 15,
+  },
+  buttonText: {
+    color: '#F9F9F9',
+    fontSize: isTablet ? 18 : 16,
+    fontWeight: '600',
+  },
+  card: {
+    backgroundColor: '#E4F0F5',
+    borderRadius: 10,
+    marginBottom: isTablet ? 20 : 15,
+    padding: isTablet ? 20 : 15,
+  },
   container: {
+    backgroundColor: '#F4F9F9',
     flex: 1,
     padding: isTablet ? 40 : 20,
+  },
+  input: {
     backgroundColor: '#F4F9F9',
-  },
-  title: {
-    fontSize: isTablet ? 32 : 24,
-    fontWeight: 'bold',
+    borderColor: '#B3C0C8',
+    borderRadius: 5,
+    borderWidth: 1,
     color: '#2D4059',
-    marginBottom: isTablet ? 30 : 20,
-    marginTop: 50,
-    textAlign: 'center',
-  },
-  topBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-    position: 'absolute',
-    top: 20,
-    left: 20,
-    right: 20,
+    fontSize: isTablet ? 18 : 16,
+    marginBottom: 20,
+    padding: isTablet ? 15 : 10,
   },
   logoutText: {
     color: '#3FA7D6',
     fontWeight: 'bold',
   },
   profileImage: {
-    width: 40,
-    height: 40,
     borderRadius: 20,
+    height: 40,
     marginLeft: 'auto',
+    width: 40,
   },
   text: {
-    fontSize: isTablet ? 20 : 18,
     color: '#4B778D',
+    fontSize: isTablet ? 20 : 18,
     lineHeight: isTablet ? 28 : 24,
   },
-  button: {
-    backgroundColor: '#3FA7D6',
-    padding: isTablet ? 20 : 15,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginTop: isTablet ? 20 : 10,
-  },
-  buttonText: {
-    fontSize: isTablet ? 18 : 16,
-    color: '#F9F9F9',
-    fontWeight: '600',
-  },
-  card: {
-    backgroundColor: '#E4F0F5',
-    padding: isTablet ? 20 : 15,
-    borderRadius: 10,
-    marginBottom: isTablet ? 20 : 15,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#B3C0C8',
-    backgroundColor: '#F4F9F9',
-    padding: isTablet ? 15 : 10,
-    borderRadius: 5,
-    fontSize: isTablet ? 18 : 16,
+  title: {
     color: '#2D4059',
-    marginBottom: 20,
+    fontSize: isTablet ? 32 : 24,
+    fontWeight: 'bold',
+    marginBottom: isTablet ? 30 : 20,
+    marginTop: 50,
+    textAlign: 'center',
   },
+  topBar: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    left: 20,
+    position: 'absolute',
+    right: 20,
+    top: 20,
+    width: '100%',
+  },
+
 });
 
 export default globalStyles;
