@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity } from 'react-native';
-import { getHealthData } from '../services/HealthDataStorage';
+import { getHealthData } from '../services/HealthDataStorage';  
 import globalStyles from '../styles';
 
 const PatientsScreen = ({ navigation }) => {

@@ -1,13 +1,11 @@
-const functions = require('firebase-functions');
-const admin = require('firebase-admin');
-const fetch = require('node-fetch');  // For making API requests
+const functions = require("firebase-functions");
+const admin = require("firebase-admin");
+const fetch = require("node-fetch"); // Use node-fetch to make API requests
 admin.initializeApp();
 
 // Cloud Function to check drug interactions using the FDA API
 exports.checkDrugInteractions = functions.https.onCall(async (data, context) => {
   const { drugs } = data;  // Array of drugs provided by the front-end
-  
-  // Check if any drugs were provided
   if (!drugs || drugs.length === 0) {
     return {
       hasInteraction: false,
@@ -16,27 +14,27 @@ exports.checkDrugInteractions = functions.https.onCall(async (data, context) => 
   }
 
   try {
-    // Construct the search query by joining the drugs with '+'
-    const searchQuery = drugs.join('+');
+    // Create a search query for the FDA API based on the provided drug list
+    const searchQuery = drugs.join('+');  // Concatenate drugs with '+' to search FDA's database
     const fdaApiUrl = `https://api.fda.gov/drug/event.json?search=${searchQuery}`;
 
-    // Fetch data from the FDA API
+    // Fetch data from the FDA API for the provided drugs
     const response = await fetch(fdaApiUrl);
     const result = await response.json();
 
-    // Check for any results indicating interactions
+    // Check for any results that indicate interactions
     if (result.results && result.results.length > 0) {
       let hasInteraction = false;
       let interactionMessage = 'No significant interactions found.';
       let interactionDetails = [];
 
-      // Loop through results to check for adverse drug reactions
+      // Loop through the results and check for reactions related to drug interactions
       result.results.forEach((event) => {
         if (event.reactions && event.reactions.length > 0) {
           hasInteraction = true;
           interactionMessage = `Adverse reaction found for ${event.patient.drug[0].medicinalproduct}`;
-          
-          // Capture the interaction details
+
+          // Capture details of the interaction
           interactionDetails.push({
             drug: event.patient.drug[0].medicinalproduct,
             reactions: event.reactions.map((reaction) => reaction.reactionmeddrapt),
@@ -44,14 +42,14 @@ exports.checkDrugInteractions = functions.https.onCall(async (data, context) => 
         }
       });
 
-      // Return interaction data if found
+      // Return the results if interactions are found
       return {
         hasInteraction,
         message: interactionMessage,
         interactions: interactionDetails.length > 0 ? interactionDetails : null,
       };
     } else {
-      // No interactions found
+      // No interactions found in the FDA API response
       return {
         hasInteraction: false,
         message: "No interactions found for the provided drugs.",

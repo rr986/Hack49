@@ -1,20 +1,26 @@
-//This file stores patient data in local storage for simplicity, you can replace this with Firebase Firestore or any other backend storage
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import firestore from '@react-native-firebase/firestore';
 
-export const saveHealthData = async (data) => {
+export const saveHealthData = async (patientId, data) => {
   try {
-    const jsonData = JSON.stringify(data);
-    await AsyncStorage.setItem('healthData', jsonData);
+    await firestore()
+      .collection('patients')
+      .doc(patientId)
+      .set(data); 
   } catch (error) {
-    console.error('Error saving health data', error);
+    console.error('Error saving health data to Firestore', error);
   }
 };
 
 export const getHealthData = async () => {
   try {
-    const jsonData = await AsyncStorage.getItem('healthData');
-    return jsonData != null ? JSON.parse(jsonData) : [];
+    const patientsSnapshot = await firestore().collection('patients').get();
+    const patientsList = patientsSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    return patientsList;
   } catch (error) {
-    console.error('Error retrieving health data', error);
+    console.error('Error retrieving health data from Firestore', error);
+    return [];
   }
 };

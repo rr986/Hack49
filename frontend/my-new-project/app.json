@@ -1,11 +1,16 @@
 {
   "expo": {
-    "name": "ADEManager",
-    "slug": "ademanager",
+    "name": "my-new-project",
+    "slug": "my-new-project",
     "version": "1.0.0",
-    "sdkVersion": "51.0.0",
-    "entryPoint": "./index.js",
-    "platforms": ["ios", "android", "web"],
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "ios": {
       "supportsTablet": true
     },
