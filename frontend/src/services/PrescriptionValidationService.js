@@ -25,9 +25,9 @@ export const checkPolypharmacyRisks = async (drugs) => {
 */
 
 import { httpsCallable } from 'firebase/functions';
-import { functions } from '../firebase';  // Import functions from shared firebase.js
+import { functions } from '../firebase';
 
-// Validate prescriptions using Firebase Functions
+// Validate prescriptions using Firebase functions
 export const validatePrescriptionInput = async (prescriptions) => {
   try {
     const validatePrescriptions = httpsCallable(functions, 'validatePrescriptionInput');
