@@ -101,7 +101,7 @@ const globalStyles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    marginLeft: 'auto', // Push the profile image as far right as possible
+    marginLeft: 'auto',
   },
   text: {
     fontSize: isTablet ? 20 : 18,
