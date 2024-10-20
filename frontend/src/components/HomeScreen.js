@@ -1,14 +1,16 @@
 import React from 'react';
 import { View, Text, Button, TouchableOpacity, Image } from 'react-native';
-import { logoutUser } from '../services/LoginService';  // Assuming logoutUser is defined in LoginService
+import { logoutUser } from '../services/LoginService';  // Assuming logoutUser is defined
 import globalStyles from '../styles';
 
-//You don't actually have to add any login or logout functions
 const HomeScreen = ({ navigation }) => {
   const handleLogout = async () => {
     try {
       await logoutUser();
-      navigation.replace('Login');
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Login' }],
+      });
     } catch (error) {
       console.error("Error logging out", error);
       alert('Logout failed');
@@ -16,7 +18,7 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const handleProfilePress = () => {
-    // Add logic to navigate to profile
+    // Logic to navigate to profile screen
     alert('Profile clicked');
   };
 

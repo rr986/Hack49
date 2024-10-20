@@ -10,6 +10,7 @@ import PrescriptionScreen from './src/components/PrescriptionScreen';
 import LabMonitoringScreen from './src/components/LabMonitoringScreen';
 import NotificationsScreen from './src/components/NotificationsScreen';
 import PolypharmacyScreen from './src/components/PolypharmacyScreen';
+import LoginScreen from './src/components/LoginScreen';
 
 const Stack = createStackNavigator();
 
