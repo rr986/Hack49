@@ -1,3 +1,5 @@
+
+/* put in Firebase and Firestore or whatever db
 export const checkDrugInteractions = async (drugs) => {
   try {
     // Simulate a real-time drug interaction check (replace with actual API call)
@@ -10,4 +12,17 @@ export const checkDrugInteractions = async (drugs) => {
   } catch (error) {
     console.error("Error checking drug interactions", error);
   }
+}
+*/
+import { httpsCallable } from 'firebase/functions';
+import { functions } from '../firebase';  // Import from the firebase.js file
+
+export const checkDrugInteractions = async (drugs) => {
+  const checkInteractions = httpsCallable(functions, 'checkDrugInteractions');
+  const result = await checkInteractions({ drugs });
+  return result.data;
 };
+
+
+
+

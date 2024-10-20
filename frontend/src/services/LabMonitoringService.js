@@ -1,4 +1,4 @@
-export const getPatientLabData = async (patientId) => {
+/*export const getPatientLabData = async (patientId) => {
   try {
     // Simulate fetching lab data (replace with actual lab data retrieval)
     const response = await fetch(`https://example.com/api/lab-data/${patientId}`);
@@ -19,5 +19,30 @@ export const setLabMonitoring = async () => {
   } catch (error) {
     console.error("Error setting lab monitoring", error);
     return { success: false };
+  }
+};
+*/
+import { httpsCallable } from 'firebase/functions';
+import { db } from '../firebase';  // Import Firestore from shared firebase.js
+
+// Fetch patient lab data from Firestore or use Firebase Function
+export const getPatientLabData = async (patientId) => {
+  try {
+    const getLabData = httpsCallable(functions, 'getPatientLabData');  // Replace with cloud function
+    const result = await getLabData({ patientId });
+    return result.data;
+  } catch (error) {
+    console.error('Error fetching lab data', error);
+  }
+};
+
+// Set lab monitoring data using Firebase Functions
+export const setLabMonitoring = async (patientId, monitoringData) => {
+  try {
+    const setMonitoring = httpsCallable(functions, 'setLabMonitoring');
+    const result = await setMonitoring({ patientId, monitoringData });
+    return result.data;
+  } catch (error) {
+    console.error('Error setting lab monitoring', error);
   }
 };
