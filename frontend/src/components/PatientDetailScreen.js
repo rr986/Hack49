@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, ScrollView, Alert } from 'react-native';
-import { checkDrugInteractions } from '../services/DrugInteractionService';
-import { validatePrescriptionInput, customizePrescriptionForPatient } from '../services/PrescriptionValidationService';
-import { getPatientLabData } from '../services/LabMonitoringService';
+import { checkDrugInteractionsFn } from '../services/DrugInteractionService';
+import { validatePrescriptionInputFn, customizePrescriptionFn } from '../services/PrescriptionValidationService';
+import { getPatientLabDataFn } from '../services/LabMonitoringService';
 import globalStyles from '../styles';
 
 const PatientDetailScreen = ({ route }) => {
@@ -13,13 +13,13 @@ const PatientDetailScreen = ({ route }) => {
 
   useEffect(() => {
     const fetchPatientData = async () => {
-      const drugInteractionResult = await checkDrugInteractions(patient.drugs);
+      const drugInteractionResult = await checkDrugInteractionsFn(patient.drugs);
       setDrugInteractions(drugInteractionResult);
 
-      const validationResult = await validatePrescriptionInput(patient.prescriptions);
+      const validationResult = await validatePrescriptionInputFn(patient.prescriptions);
       setPrescriptionValidation(validationResult);
 
-      const labResult = await getPatientLabData(patient.id);
+      const labResult = await getPatientLabDataFn(patient.id);
       setLabData(labResult);
     };
     fetchPatientData();

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, Button } from 'react-native';
-import { setLabMonitoring } from '../services/LabMonitoringService';
+import { setLabMonitoringFn } from '../services/LabMonitoringService';
 import globalStyles from '../styles';
 
 const LabMonitoringScreen = () => {
   const [monitoringStatus, setMonitoringStatus] = useState(false);
 
   const handleSetMonitoring = async () => {
-    const result = await setLabMonitoring();
+    const result = await setLabMonitoringFn();
     if (result.success) {
       setMonitoringStatus(true);
     }

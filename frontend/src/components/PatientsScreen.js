@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity } from 'react-native';
-import { getHealthData } from '../services/HealthDataStorage';
+import { getUserPatientsFn, getPatientDataFn } from '../services/PatientDataStorage';
 import globalStyles from '../styles';
 
 const PatientsScreen = ({ navigation }) => {
@@ -10,7 +10,7 @@ const PatientsScreen = ({ navigation }) => {
 
   useEffect(() => {
     const fetchPatients = async () => {
-      const data = await getHealthData();
+      const data = await getPatientDataFn();
       setPatients(data || []);
       setFilteredPatients(data || []);
     };
@@ -26,10 +26,6 @@ const PatientsScreen = ({ navigation }) => {
     setFilteredPatients(filtered);
   };
 
-  const handlePatientPress = (patient) => {
-    navigation.navigate('Patient Detail', { patient });
-  };
-
   return (
     <View style={globalStyles.container}>
       <Text style={globalStyles.title}>Patients</Text>
@@ -43,7 +39,7 @@ const PatientsScreen = ({ navigation }) => {
         data={filteredPatients}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handlePatientPress(item)}>
+          <TouchableOpacity onPress={() => navigation.navigate('Patient Detail', { patient: item })}>
             <View style={globalStyles.card}>
               <Text>{item.firstName} {item.lastName}</Text>
               <Text>Admit Reason: {item.admitReason}</Text>

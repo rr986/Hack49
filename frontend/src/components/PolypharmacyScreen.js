@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, Alert, FlatList } from 'react-native';
-import { checkPolypharmacyRisks } from '../services/PrescriptionValidationService';
+import { checkPolypharmacyRisksFn } from '../services/PrescriptionValidationService';
 import globalStyles from '../styles';
 
 const PolypharmacyScreen = () => {
@@ -20,7 +20,7 @@ const PolypharmacyScreen = () => {
   }, []);
 
   const handleCheckPolypharmacy = async () => {
-    const result = await checkPolypharmacyRisks(patientData.drugs);
+    const result = await checkPolypharmacyRisksFn(patientData.drugs);
     if (result.hasRisk) {
       Alert.alert("Polypharmacy Risk", result.message);
     } else {

@@ -1,7 +1,7 @@
 //probably will not use
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert, ActivityIndicator } from 'react-native';
-import { loginUser, getUserData } from '../services/LoginService';
+import { loginUserFn, getUserDataFn } from '../services/LoginService';
 import globalStyles from '../styles';
 
 const LoginScreen = ({ navigation }) => {
@@ -18,8 +18,8 @@ const LoginScreen = ({ navigation }) => {
     setLoading(true);
 
     try {
-      const user = await loginUser(email, password);
-      const userData = await getUserData(user.uid);
+      const user = await loginUserFn(email, password);
+      const userData = await getUserDataFn(user.uid);
       console.log('User data:', userData);
 
       setLoading(false);

@@ -1,45 +1,41 @@
 //probably will not actually use this, you don't need to add functions to login and out or get data
-import { auth, db } from '../firebase';
-import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { httpsCallable } from 'firebase/functions';
+import { functions } from '../firebase';  // Import Firebase Cloud Functions
 
-// Function to sign in a user
-export const loginUser = async (email, password) => {
+// Function to sign in a user by calling Firebase Cloud Functions
+export const loginUserFn = async (email, password) => {
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
-    return user;  // Return logged-in user
+    // Call the login function defined in your Firebase Functions
+    const login = httpsCallable(functions, 'loginUserFn');
+    const result = await login({ email, password });
+    return result.data;  // Return logged-in user details from Firebase Functions
   } catch (error) {
-    console.error("Login error", error);
+    console.error("Login error:", error);
     throw error;
   }
 };
 
 // Function to log out the user
-export const logoutUser = async () => {
+export const logoutUserFn = async () => {
   try {
-    //await signOut(auth);
+    const logout = httpsCallable(functions, 'logoutUserFn');
+    await logout();
     console.log('User logged out');
   } catch (error) {
-    console.error('Logout error', error);
+    console.error('Logout error:', error);
     throw error;
   }
 };
 
-// Function to retrieve user-specific data after login
-export const getUserData = async (userId) => {
+// Function to retrieve user-details  data after login
+export const getUserDetailsFn = async (email, password) => {
   try {
-    const userRef = doc(db, 'users', userId);  // Reference to user data in Firestore
-    const userDoc = await getDoc(userRef);
-
-    if (userDoc.exists()) {
-      return userDoc.data();
-    } else {
-      console.log('No such user data!');
-      return null;
-    }
+    // Use Firebase Cloud Functions to fetch the user's details
+    const getUserDetails = httpsCallable(functions, 'getUserDetailsFn');
+    const result = await getUserDetails({ email, password });
+    return result.data;
   } catch (error) {
-    console.error('Error fetching user data', error);
+    console.error('Error fetching user details:', error);
     throw error;
   }
 };

@@ -17,8 +17,8 @@ export const checkDrugInteractions = async (drugs) => {
 import { httpsCallable } from 'firebase/functions';
 import { functions } from '../firebase';  // Import from the firebase.js file
 
-export const checkDrugInteractions = async (drugs) => {
-  const checkInteractions = httpsCallable(functions, 'checkDrugInteractions');
+export const checkDrugInteractionsFn = async (drugs) => {
+  const checkInteractions = httpsCallable(functions, 'checkDrugInteractionsFn');
   const result = await checkInteractions({ drugs });
   return result.data;
 };

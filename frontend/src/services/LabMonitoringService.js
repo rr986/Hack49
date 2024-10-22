@@ -23,12 +23,12 @@ export const setLabMonitoring = async () => {
 };
 */
 import { httpsCallable } from 'firebase/functions';
-import { db } from '../firebase';  // Import Firestore from shared firebase.js
+import { db } from '../firebase';
 
 // Fetch patient lab data from Firestore or use Firebase Function
-export const getPatientLabData = async (patientId) => {
+export const getPatientLabDataFn = async (patientId) => {
   try {
-    const getLabData = httpsCallable(functions, 'getPatientLabData');  // Replace with cloud function
+    const getLabData = httpsCallable(functions, 'getPatientLabDataFn');  // Replace with cloud function
     const result = await getLabData({ patientId });
     return result.data;
   } catch (error) {
@@ -37,9 +37,9 @@ export const getPatientLabData = async (patientId) => {
 };
 
 // Set lab monitoring data using Firebase Functions
-export const setLabMonitoring = async (patientId, monitoringData) => {
+export const setLabMonitoringFn = async (patientId, monitoringData) => {
   try {
-    const setMonitoring = httpsCallable(functions, 'setLabMonitoring');
+    const setMonitoring = httpsCallable(functions, 'setLabMonitoringFn');
     const result = await setMonitoring({ patientId, monitoringData });
     return result.data;
   } catch (error) {

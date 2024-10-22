@@ -3,12 +3,13 @@ import { getFirestore } from 'firebase/firestore';
 import { getFunctions } from 'firebase/functions';
 
 const firebaseConfig = {
-  apiKey: 'API_KEY',
-  authDomain: 'AUTH_DOMAIN',
-  projectId: 'PROJECT_ID',
-  storageBucket: 'STORAGE_BUCKET',
-  messagingSenderId: 'MESSAGING_SENDER_ID',
-  appId: 'APP_ID',
+  apiKey: "AIzaSyBLq3wooKWJr7fsk_GiqDYROOxOy78d6Mw",
+  authDomain: "ade-manager.firebaseapp.com",
+  projectId: "ade-manager",
+  storageBucket: "ade-manager.appspot.com",
+  messagingSenderId: "840153785316",
+  appId: "1:840153785316:web:350950aefc362b1b929df1",
+  measurementId: "G-1YRG7MEH12"
 };
 
 // Initialize Firebase

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Button, TextInput, Alert } from 'react-native';
-import { checkDrugInteractions } from '../services/DrugInteractionService';
+import { checkDrugInteractionsFn } from '../services/DrugInteractionService';
 import globalStyles from '../styles';
 
 const DrugInteractionScreen = () => {
@@ -9,7 +9,7 @@ const DrugInteractionScreen = () => {
   const [interactionData, setInteractionData] = useState(null);
 
   const handleCheckInteractions = async () => {
-    const result = await checkDrugInteractions([drug1, drug2]);
+    const result = await checkDrugInteractionsFn([drug1, drug2]);
     if (result.hasInteraction) {
       Alert.alert("Warning", result.message);
     } else {
