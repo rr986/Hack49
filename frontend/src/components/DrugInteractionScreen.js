@@ -9,13 +9,17 @@ const DrugInteractionScreen = () => {
   const [interactionData, setInteractionData] = useState(null);
 
   const handleCheckInteractions = async () => {
-    const result = await checkDrugInteractionsFn([drug1, drug2]);
-    if (result.hasInteraction) {
-      Alert.alert("Warning", result.message);
-    } else {
-      Alert.alert("Safe", "No drug interactions detected.");
+    try {
+      const result = await checkDrugInteractionsFn([drug1, drug2]);
+      if (result.hasInteraction) {
+        Alert.alert("Warning", result.message);
+      } else {
+        Alert.alert("Safe", "No drug interactions detected.");
+      }
+      setInteractionData(result);
+    } catch (error) {
+      Alert.alert("Error", "Failed to check drug interactions.");
     }
-    setInteractionData(result);
   };
 
   return (

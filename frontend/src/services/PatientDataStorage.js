@@ -4,24 +4,40 @@ import { functions } from '../firebase';  // Import Firebase Cloud Functions
 // Get a single patient's data using Firebase Cloud Functions
 export const getPatientDataFn = async (patientId) => {
   try {
-    const getPatient = httpsCallable(functions, 'getPatientDataFn');
-    const result = await getPatient({ patientId });
-    return result.data;
+    const response = await fetch('https://us-central1-ade-manager.cloudfunctions.net/getPatientDataFn', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ patientId }),
+    });
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error('Error retrieving patient data', error);
+    throw error;
   }
 };
 
+
 // Get all patients for a specific user using Firebase Cloud Functions
-export const getUserPatientsFn = async (userId) => {
+export const getUserPatientsFn = async (userID) => {
   try {
-    const getUserPatients = httpsCallable(functions, 'getUserPatientsFn');
-    const result = await getUserPatients({ userID: userId });
-    return result.data;
+    const response = await fetch('https://us-central1-ade-manager.cloudfunctions.net/getUserPatientsFn', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userID }),
+    });
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error('Error retrieving user patients', error);
+    throw error;
   }
 };
+
 
 /*
 Not used

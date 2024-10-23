@@ -1,34 +1,42 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, ScrollView, Alert } from 'react-native';
-import { checkDrugInteractionsFn } from '../services/DrugInteractionService';
-import { validatePrescriptionInputFn, customizePrescriptionFn } from '../services/PrescriptionValidationService';
-import { getPatientLabDataFn } from '../services/LabMonitoringService';
+import { View, Text, ScrollView, Alert } from 'react-native';
+import { getPatientDataFn } from '../services/PatientDataStorage';
 import globalStyles from '../styles';
 
 const PatientDetailScreen = ({ route }) => {
-  const { patient } = route.params;
-  const [drugInteractions, setDrugInteractions] = useState(null);
-  const [prescriptionValidation, setPrescriptionValidation] = useState(null);
-  const [labData, setLabData] = useState(null);
+  const { patientId } = route.params;  // Retrieve the patientId from navigation
+  const [patient, setPatient] = useState(null);
 
   useEffect(() => {
     const fetchPatientData = async () => {
-      const drugInteractionResult = await checkDrugInteractionsFn(patient.drugs);
-      setDrugInteractions(drugInteractionResult);
-
-      const validationResult = await validatePrescriptionInputFn(patient.prescriptions);
-      setPrescriptionValidation(validationResult);
-
-      const labResult = await getPatientLabDataFn(patient.id);
-      setLabData(labResult);
+      try {
+        // Fetch the patient data by ID
+        const data = await getPatientDataFn(patientId);
+        setPatient(data);
+      } catch (error) {
+        console.error('Error fetching patient data', error);
+        Alert.alert('Error', 'Failed to load patient details.');
+      }
     };
+
     fetchPatientData();
-  }, [patient]);
+  }, [patientId]);
+
+  if (!patient) {
+    return (
+      <View style={globalStyles.container}>
+        <Text>Loading patient data...</Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView style={globalStyles.container}>
       <Text style={globalStyles.title}>{patient.firstName} {patient.lastName}</Text>
-      <Text>Admit Reason: {patient.admitReason}</Text>
+      <Text>Admit Reason: {patient.reasonForAdmit}</Text>
+
+      <Text style={globalStyles.sectionTitle}>Allergies</Text>
+      <Text>{patient.allergies || 'None'}</Text>
 
       <Text style={globalStyles.sectionTitle}>Drugs Currently Prescribed</Text>
       {patient.drugs.map((drug, index) => (
@@ -38,22 +46,15 @@ const PatientDetailScreen = ({ route }) => {
         </View>
       ))}
 
-      <Button
-        title="Check Drug Interactions"
-        onPress={() => Alert.alert('Drug Interaction Results', JSON.stringify(drugInteractions))}
-      />
-
-      <Text style={globalStyles.sectionTitle}>Prescription Validation</Text>
-      <Button
-        title="Validate Prescription"
-        onPress={() => Alert.alert('Validation Results', JSON.stringify(prescriptionValidation))}
-      />
-
       <Text style={globalStyles.sectionTitle}>Lab Monitoring Data</Text>
-      {labData ? (
+      {patient.labData ? (
         <View>
-          <Text>Lab Test: {labData.testName}</Text>
-          <Text>Result: {labData.result}</Text>
+          {patient.labData.map((lab, index) => (
+            <View key={index}>
+              <Text>Lab Test: {lab.testName}</Text>
+              <Text>Result: {lab.result}</Text>
+            </View>
+          ))}
         </View>
       ) : (
         <Text>No lab data available.</Text>

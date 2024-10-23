@@ -4,30 +4,39 @@ import { loginUserFn, logoutUserFn, getUserDetailsFn } from '../services/LoginSe
 import globalStyles from '../styles';
 
 const HomeScreen = ({ navigation }) => {
-    const [userDetails, setUserDetails] = useState(null);  // State to store user details
+        const [userDetails, setUserDetails] = useState(null);  // State to store user details
 
-    useEffect(() => {
-        const autoLogin = async () => {
-            try {
-                // Automatically logs in the user with the email and password stored in Firestore
-                const userCredential = await loginUserFn('user@health.edu', 'password');
-                console.log('Auto-login successful:', userCredential);
+        useEffect(() => {
+            const autoLogin = async () => {
+                try {
+                    // Define email and password inside the function
+                    const email = 'user@health.edu';  // Your email value
+                    const password = 'password';      // Your password value
 
-                // Fetch additional user details after successful login
-                const userData = await getUserDetailsFn('user@health.edu', 'password');
-                console.log('User details fetched:', userData);
-                setUserDetails(userData);  // Store user details in state
-            } catch (error) {
-                console.error('Error in auto-login:', error);
-            }
-        };
+                    // Log the email and password to verify
+                    console.log('Email:', email);
+                    console.log('Password:', password);
 
-        autoLogin();  // Call auto-login when the component is mounted
-    }, []);
+                    // Automatically log in the user with the email and password
+                    const userCredential = await loginUserFn(email, password);
+                    console.log('Auto-login successful:', userCredential);
+
+                    // Fetch additional user details after successful login
+                    const userData = await getUserDetailsFn(email, password);
+                    console.log('User details fetched:', userData);
+                    setUserDetails(userData);  // Store user details in state
+                } catch (error) {
+                    console.error('Error in auto-login:', error);
+                }
+            };
+
+            autoLogin();  // Call auto-login when the component is mounted
+        }, []);
 
     const handleLogout = async () => {
         try {
-            await logoutUserFn();
+            await logoutUserFn(userDetails?.userID);
+            console.log('User logged out');
             navigation.reset({
                 index: 0,
                 routes: [{ name: 'Login' }],

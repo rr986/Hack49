@@ -3,57 +3,60 @@ import admin from 'firebase-admin';
 import { db } from '../utils/db.js';
 
 // Function to get a single patient's data
-export const getPatientData = functions.https.onCall(async (data, context) => {
-  const { patientId } = data;
+export const getPatientData = functions.https.onRequest(async (req, res) => {
+  const { patientId } = req.body;
+
+  // Log the patient ID and collection reference
   console.log(`Fetching data for patient ID: ${patientId}`);
+  console.log(`Collection name: Patients`);
 
   try {
-    const patientRef = db.collection('patients').doc(patientId);
+    // Reference to the patient document in the "Patients" collection
+    const patientRef = db.collection('Patients').doc(patientId);
+
+    // Log the path to the patient document reference
+    console.log(`Document reference: ${patientRef.path}`);
+
     const patientDoc = await patientRef.get();
 
     if (!patientDoc.exists) {
       console.log(`Patient not found with ID: ${patientId}`);
-      throw new functions.https.HttpsError('not-found', 'Patient data not found.');
+      return res.status(404).send('Patient not found.');
     }
 
     console.log(`Patient data retrieved successfully: ${JSON.stringify(patientDoc.data())}`);
-    return patientDoc.data();  // Returning the patient data
+    return res.status(200).send(patientDoc.data());  // Return the patient data
   } catch (error) {
     console.error(`Error retrieving patient data for patient ID: ${patientId}`, error);
-    throw new functions.https.HttpsError('unknown', 'Error retrieving patient data.');
+    return res.status(500).send('Error retrieving patient data.');
   }
 });
 
 // Function to retrieve all patients for a specific user
-export const getUserPatients = functions.https.onCall(async (data, context) => {
-  const { userID } = data;
-  console.log(`Fetching patients for user ID: ${userID}`);
+export const getUserPatients = functions.https.onRequest(async (req, res) => {
+  const { userID } = req.body;
 
   try {
     const userRef = db.collection('users').doc(userID);
     const userDoc = await userRef.get();
 
     if (!userDoc.exists) {
-      console.log(`User not found with ID: ${userID}`);
-      throw new functions.https.HttpsError('not-found', 'User not found.');
+      return res.status(404).send('User not found.');
     }
 
     const { patients: patientIDs } = userDoc.data();
-    console.log(`User ${userID} has the following patient IDs: ${patientIDs}`);
 
-    // Fetch all the patient's data based on the patientIDs
-    const patientsPromises = patientIDs.map((patientID) => db.collection('patients').doc(patientID).get());
+    const patientsPromises = patientIDs.map((patientID) => db.collection('Patients').doc(patientID).get());
     const patientsSnapshots = await Promise.all(patientsPromises);
 
     const patients = patientsSnapshots.map((doc) => ({ id: doc.id, ...doc.data() }));
-    console.log(`Fetched patient data: ${JSON.stringify(patients)}`);
-
-    return patients;  // Return the patient's data
+    return res.status(200).send(patients);
   } catch (error) {
-    console.error(`Error retrieving user patients for user ID: ${userID}`, error);
-    throw new functions.https.HttpsError('unknown', 'Error retrieving user patients.');
+    console.error('Error retrieving patients:', error);
+    return res.status(500).send('Error retrieving user patients.');
   }
 });
+
 
 
 /*Not used:

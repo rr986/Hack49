@@ -22,27 +22,52 @@ export const setLabMonitoring = async () => {
   }
 };
 */
-import { httpsCallable } from 'firebase/functions';
 import { db } from '../firebase';
 
 // Fetch patient lab data from Firestore or use Firebase Function
 export const getPatientLabDataFn = async (patientId) => {
   try {
-    const getLabData = httpsCallable(functions, 'getPatientLabDataFn');  // Replace with cloud function
-    const result = await getLabData({ patientId });
-    return result.data;
+    const response = await fetch('https://us-central1-ade-manager.cloudfunctions.net/getPatientLabDataFn', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ patientId }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch lab data');
+    }
+
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error('Error fetching lab data', error);
+    throw error;
   }
 };
+
 
 // Set lab monitoring data using Firebase Functions
 export const setLabMonitoringFn = async (patientId, monitoringData) => {
   try {
-    const setMonitoring = httpsCallable(functions, 'setLabMonitoringFn');
-    const result = await setMonitoring({ patientId, monitoringData });
-    return result.data;
+    const response = await fetch('https://us-central1-ade-manager.cloudfunctions.net/setLabMonitoringFn', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ patientId, monitoringData }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to set lab monitoring');
+    }
+
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error('Error setting lab monitoring', error);
+    throw error;
   }
 };
+

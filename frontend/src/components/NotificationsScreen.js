@@ -1,18 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList } from 'react-native';
-import globalStyles from '../styles';
+import { getNotificationsForUserFn } from '../services/NotificationService'; // Update import
 
 const NotificationsScreen = () => {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    const fetchNotifications = () => {
-      const sampleNotifications = [
-        { id: 1, message: 'Drug interaction alert: Aspirin and Warfarin' },
-        { id: 2, message: 'Reminder: Review patient X lab results for INR' },
-        { id: 3, message: 'Polypharmacy risk detected for patient Y' },
-      ];
-      setNotifications(sampleNotifications);
+    const fetchNotifications = async () => {
+      try {
+        const userID = 'WmD4yXXhogKH6DbLRg70';  // Replace with actual userID
+        const fetchedNotifications = await getNotificationsForUserFn(userID);
+
+        const notificationsArray = fetchedNotifications.Notifications.map((message, index) => ({
+          id: index + 1,
+          message,
+        }));
+
+        setNotifications(notificationsArray);
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
     };
 
     fetchNotifications();

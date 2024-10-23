@@ -1,69 +1,103 @@
 import * as functions from 'firebase-functions';  // Import Firebase Functions
-import { db } from '../utils/db.js';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { db, auth } from '../utils/db.js';
 import { getFirestore } from 'firebase-admin/firestore';
+import * as admin from 'firebase-admin';
 
 // Fct to login
-export const loginUser = functions.https.onCall(async (data, context) => {
-  const { email, password } = data;
+export const loginUser = functions.https.onRequest(async (req, res) => {
+  console.log("Received data:", req.body);
+
+  // Ensure data is defined
+  if (!req.body) {
+    console.error('No data received in function.');
+    return res.status(400).send('No data received.');
+  }
+
+  const { email, password } = req.body;
 
   // Log email and password to check if they're received correctly
   console.log('Email:', email);
   console.log('Password:', password);
 
-  try {
-    // Search the Firestore users collection where the email and password match
-    const usersRef = db.collection('users');
-    const q = usersRef.where('email', '==', email).where('password', '==', password);
-    const querySnapshot = await q.get();
+  // Validate email and password
+  if (!email || !password) {
+    console.error('Email or password is undefined.');
+    return res.status(400).send('Email and password must be provided.');
+  }
 
-    if (!querySnapshot.empty) {
-      // User found, proceed with Firebase Authentication
-      const userDoc = querySnapshot.docs[0];
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      return { user: userCredential.user };
-    } else {
-      console.error("No matching user found in Firestore.");
-      throw new functions.https.HttpsError('not-found', 'User not found or incorrect password.');
+  try {
+    // Fetch the user document from Firestore based on the email
+    const usersRef = db.collection('users');
+    const userSnapshot = await usersRef.where('email', '==', email).where('password', '==', password).get();
+
+    if (userSnapshot.empty) {
+      // No matching user found
+      console.error('No matching user found in Firestore.');
+      return res.status(404).send('User not found or incorrect credentials.');
     }
+
+    // Assuming only one user document matches
+    const userDoc = userSnapshot.docs[0];
+    const userData = userDoc.data();
+
+    // Return the user data
+    return res.status(200).send({ user: userData });
   } catch (error) {
-    console.error("Log-in Error:", error);
-    throw new functions.https.HttpsError('unknown', error.message);
+    console.error("Login Error:", error);
+    return res.status(500).send(error.message);
   }
 });
 
 
+
 //logout
-export const logoutUser = functions.https.onCall(async (data, context) => {
+export const logoutUser = functions.https.onRequest(async (req, res) => {
   try {
-    await signOut(auth);
-    console.log('User logged out');
-    return { success: true, message: 'User logged out successfully' };
+    const uid = req.body.uid;  // Assume the UID is passed in the request body
+
+    if (!uid) {
+      return res.status(401).send('User UID is not provided.');
+    }
+
+    // Revoke user's refresh tokens to force re-authentication
+    await auth.revokeRefreshTokens(uid);
+
+    console.log(`User with UID ${uid} logged out`);
+    return res.status(200).send({ success: true, message: 'User logged out successfully' });
   } catch (error) {
     console.error('Logout error:', error);
-    throw new functions.https.HttpsError('unknown', 'Error logging out.');
+    return res.status(500).send('Error logging out.');
   }
 });
 
 // Function to retrieve user-specific data from Firestore after login
-export const getUserDetails = functions.https.onCall(async (data, context) => {
-  const { email, password } = data;
+export const getUserDetails = functions.https.onRequest(async (req, res) => {
+  const { email, password } = req.body;
+
+  // Validate email and password
+  if (!email || !password) {
+    return res.status(400).send('Email and password must be provided.');
+  }
+
   try {
+    // Query Firestore to find the user
     const usersRef = db.collection('users');
-    const snapshot = await usersRef.where('email', '==', email).where('password', '==', password).get();
+    const querySnapshot = await usersRef
+      .where('email', '==', email)
+      .where('password', '==', password)
+      .get();
 
-    if (snapshot.empty) {
-      throw new functions.https.HttpsError('not-found', 'Invalid credentials.');
+    if (!querySnapshot.empty) {
+      // User found
+      const userDoc = querySnapshot.docs[0];
+      const userData = userDoc.data();
+      return res.status(200).send({ userID: userDoc.id, ...userData });
+    } else {
+      return res.status(404).send('Invalid email or password.');
     }
-
-    // Assuming only one document should match
-    const userDoc = snapshot.docs[0];
-    const userData = userDoc.data();
-    return { userID: userDoc.id, ...userData };
   } catch (error) {
-    console.error('Error logging in:', error);
-    throw new functions.https.HttpsError('unknown', 'Login failed.');
+    console.error('Error fetching user details:', error);
+    return res.status(500).send('Failed to fetch user details.');
   }
 });
 

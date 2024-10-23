@@ -1,48 +1,71 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, Alert, FlatList } from 'react-native';
-import { checkPolypharmacyRisksFn } from '../services/PrescriptionValidationService';
+import { getUserPatientsFn, retrievePatientPrescriptionsFn, checkPolypharmacyRisksFn } from '../services/PrescriptionValidationService';
 import globalStyles from '../styles';
 
 const PolypharmacyScreen = () => {
-  const [patientData, setPatientData] = useState({ drugs: [] });
-  const [polypharmacyRisk, setPolypharmacyRisk] = useState(null);
+  const [patientId, setPatientId] = useState('');
+  const [patients, setPatients] = useState([]);
+  const [prescriptions, setPrescriptions] = useState([]);
 
   useEffect(() => {
-    const samplePatient = {
-      id: 1,
-      drugs: [
-        { name: 'Aspirin', dose: '100mg' },
-        { name: 'Warfarin', dose: '5mg' },
-        { name: 'Lisinopril', dose: '10mg' },
-      ],
+    const fetchPatients = async () => {
+      const result = await getUserPatientsFn();
+      setPatients(result);
     };
-    setPatientData(samplePatient);
+    fetchPatients();
   }, []);
 
+  const fetchPrescriptions = async () => {
+    try {
+      if (!patientId) {
+        Alert.alert("Error", "Please select a patient.");
+        return;
+      }
+      const result = await retrievePatientPrescriptionsFn(patientId);
+      setPrescriptions(result);
+    } catch (error) {
+      console.error('Error fetching prescriptions', error);
+    }
+  };
+
   const handleCheckPolypharmacy = async () => {
-    const result = await checkPolypharmacyRisksFn(patientData.drugs);
+    const drugs = prescriptions.map(p => p.drug);
+    const result = await checkPolypharmacyRisksFn(drugs);
+
     if (result.hasRisk) {
       Alert.alert("Polypharmacy Risk", result.message);
     } else {
       Alert.alert("Safe", "No polypharmacy risks detected.");
     }
-    setPolypharmacyRisk(result);
   };
 
   return (
     <View style={globalStyles.container}>
-      <Text style={globalStyles.title}>Polypharmacy Check</Text>
+      <Text>Select Patient</Text>
+      <Picker
+        selectedValue={patientId}
+        onValueChange={(itemValue) => setPatientId(itemValue)}
+        style={globalStyles.input}
+      >
+        {patients.map((patient) => (
+          <Picker.Item key={patient.id} label={`${patient.firstName} ${patient.lastName}`} value={patient.id} />
+        ))}
+      </Picker>
+
+      <Button title="Fetch Prescriptions" onPress={fetchPrescriptions} />
+
       <FlatList
-        data={patientData.drugs}
+        data={prescriptions}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
           <View style={globalStyles.card}>
-            <Text>{item.name} - {item.dose}</Text>
+            <Text>{item.drug} - {item.dose}</Text>
           </View>
         )}
       />
-      <Button title="Check for Polypharmacy Risks" onPress={handleCheckPolypharmacy} />
-      {polypharmacyRisk && <Text>{polypharmacyRisk.message}</Text>}
+
+      <Button title="Check Polypharmacy Risks" onPress={handleCheckPolypharmacy} />
     </View>
   );
 };

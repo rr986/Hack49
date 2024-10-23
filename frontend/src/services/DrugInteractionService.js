@@ -14,15 +14,23 @@ export const checkDrugInteractions = async (drugs) => {
   }
 }
 */
-import { httpsCallable } from 'firebase/functions';
-import { functions } from '../firebase';  // Import from the firebase.js file
-
 export const checkDrugInteractionsFn = async (drugs) => {
-  const checkInteractions = httpsCallable(functions, 'checkDrugInteractionsFn');
-  const result = await checkInteractions({ drugs });
-  return result.data;
-};
+  try {
+    const response = await fetch('https://us-central1-ade-manager.cloudfunctions.net/checkDrugInteractionsFn', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ drugs }),  // Send drugs array in the request body
+    });
 
+    const result = await response.json();
+    return result;  // Return the API response
+  } catch (error) {
+    console.error("Error checking drug interactions:", error);
+    throw error;
+  }
+};
 
 
 
