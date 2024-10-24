@@ -8,7 +8,7 @@ import { checkDrugInteractions } from '../drugInteractions/index.js';
 
 // Initialize OpenAI configuration
 const openai = new OpenAI({
-  apiKey: 'key',
+  apiKey: '',
 });
 
 
