@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, Alert } from 'react-native';
+import { ScrollView, View, Text, TextInput, Button, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { getUserPatientsFn } from '../services/PatientDataStorage';
 import { retrievePatientPrescriptionsFn, validatePrescriptionInputFn, customizePrescriptionFn, checkPolypharmacyRisksFn, addPrescriptionFn } from '../services/PrescriptionValidationService';
@@ -95,55 +95,57 @@ const PrescriptionScreen = () => {
   };
 
   return (
-    <View style={globalStyles.container}>
-      <Text>Select Patient</Text>
-      <Picker
-        selectedValue={patientId}
-        onValueChange={(itemValue) => setPatientId(itemValue)}
-        style={globalStyles.input}
-      >
-        {patients.map((patient) => (
-          <Picker.Item key={patient.id} label={`${patient.firstName} ${patient.lastName}`} value={patient.id} />
-        ))}
-      </Picker>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
+      <View style={globalStyles.container}>
+        <Text>Select Patient</Text>
+        <Picker
+          selectedValue={patientId}
+          onValueChange={(itemValue) => setPatientId(itemValue)}
+          style={globalStyles.input}
+        >
+          {patients.map((patient) => (
+            <Picker.Item key={patient.id} label={`${patient.firstName} ${patient.lastName}`} value={patient.id} />
+          ))}
+        </Picker>
 
-      <TextInput
-        placeholder="Drug"
-        value={drug}
-        onChangeText={setDrug}
-        style={globalStyles.input}
-      />
-      <TextInput
-        placeholder="Dose"
-        value={dose}
-        onChangeText={setDose}
-        style={globalStyles.input}
-      />
-      <TextInput
-        placeholder="Date"
-        value={date}
-        onChangeText={setDate}
-        style={globalStyles.input}
-      />
-      <TextInput
-        placeholder="Purpose (optional)"
-        value={purpose}
-        onChangeText={setPurpose}
-        style={globalStyles.input}
-      />
+        <TextInput
+          placeholder="Drug"
+          value={drug}
+          onChangeText={setDrug}
+          style={globalStyles.input}
+        />
+        <TextInput
+          placeholder="Dose"
+          value={dose}
+          onChangeText={setDose}
+          style={globalStyles.input}
+        />
+        <TextInput
+          placeholder="Date"
+          value={date}
+          onChangeText={setDate}
+          style={globalStyles.input}
+        />
+        <TextInput
+          placeholder="Purpose (optional)"
+          value={purpose}
+          onChangeText={setPurpose}
+          style={globalStyles.input}
+        />
 
-      <Button title="Validate Prescription" onPress={handleValidate} />
+        <Button title="Validate Prescription" onPress={handleValidate} />
 
-      {customizedPrescription && (
-        <View style={globalStyles.card}>
-          <Text>AI Message: {aiMessage}</Text>
-          <Text>Drug: {customizedPrescription.drug}</Text>
-          <Text>Adjusted Dose: {customizedPrescription.adjustedDose}</Text>
-        </View>
-      )}
+        {customizedPrescription && (
+          <View style={globalStyles.card}>
+            <Text>AI Message: {aiMessage}</Text>
+            <Text>Drug: {customizedPrescription.drug}</Text>
+            <Text>Adjusted Dose: {customizedPrescription.adjustedDose}</Text>
+          </View>
+        )}
 
-      <Button title="Add Prescription" onPress={handleAddPrescription} disabled={!prescriptionValidated} />
-    </View>
+        <Button title="Add Prescription" onPress={handleAddPrescription} disabled={!prescriptionValidated} />
+      </View>
+    </ScrollView>
   );
 };
 
