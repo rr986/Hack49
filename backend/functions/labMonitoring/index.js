@@ -24,8 +24,8 @@ export const getPatientLabData = functions.https.onRequest(async (req, res) => {
 export const setLabMonitoring = functions.https.onRequest(async (req, res) => {
   const { patientId, monitoringData } = req.body;
   try {
-    const labRef = db.collection('labMonitoring').doc(patientId);  // Reference the patient’s lab data
-    await labRef.set(monitoringData);  // Save the monitoring data
+    const labRef = db.collection('labMonitoring').doc(patientId);
+    await labRef.set(monitoringData);
     return res.status(200).send({ success: true });
   } catch (error) {
     console.error('Error setting lab monitoring data:', error);

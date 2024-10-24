@@ -6,22 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="4597f92d-46ce-4bae-8465-a9699c7ea478" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/functions/auth/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/functions/auth/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/functions/drugInteractions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/functions/drugInteractions/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/functions/labMonitoring/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/functions/labMonitoring/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/functions/notifications/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/functions/notifications/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/functions/prescriptions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/functions/prescriptions/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/HomeScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/HomeScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/LabMonitoringScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/LabMonitoringScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/NotificationsScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/NotificationsScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/PatientDetailScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/PatientDetailScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/PatientsScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/PatientsScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/PolypharmacyScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/PolypharmacyScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/PrescriptionScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/PrescriptionScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/services/DrugInteractionService.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/services/DrugInteractionService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/services/LoginService.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/services/LoginService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/services/NotificationsService.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/services/NotificationsService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/services/PatientDataStorage.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/services/PatientDataStorage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/services/PrescriptionValidationService.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/services/PrescriptionValidationService.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

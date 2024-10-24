@@ -1,11 +1,8 @@
 import * as functions from 'firebase-functions';
 import { db } from '../utils/db.js';
 import { doc, setDoc } from 'firebase/firestore';  // Add this line if it's missing
-import
 
-// Function to get notifications for a specific user (based on userID)
 export const getNotificationsForUser = functions.https.onRequest(async (req, res) => {
-  // Log the incoming request to ensure data is being received properly
   console.log("Request received:", req.body);
 
   const { userID } = req.body;
