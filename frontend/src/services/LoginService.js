@@ -1,30 +1,26 @@
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { functions, app } from '../firebase';  // Import Firebase Cloud Functions
+import { functions, app } from '../firebase';
 import { collection, query, where, doc, getDocs } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 
-// Function to sign in a user by calling Firebase Cloud Functions
 export const loginUserFn = async (email, password) => {
   try {
     console.log('Sending email and password:', { email, password });
 
-    // Use fetch to send the POST request
     const response = await fetch('https://us-central1-ade-manager.cloudfunctions.net/loginUserFn', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, password }),  // Send email and password
+      body: JSON.stringify({ email, password }),
     });
 
-    // Check the status of the response
     if (!response.ok) {
       const errorText = await response.text();
       console.error("Error in response:", errorText);
       throw new Error(errorText);
     }
 
-    // Try to parse the response as JSON
     const data = await response.json();
     console.log('Login success:', data);
     return data;  // Return the response data
@@ -35,7 +31,6 @@ export const loginUserFn = async (email, password) => {
   }
 };
 
-// Function to log out the user
 export const logoutUserFn = async (uid) => {
   try {
     console.log('Logging out user with UID:', uid);
@@ -45,7 +40,7 @@ export const logoutUserFn = async (uid) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ uid }),  // Send UID in the request body
+      body: JSON.stringify({ uid }),
     });
 
     if (!response.ok) {
@@ -60,7 +55,6 @@ export const logoutUserFn = async (uid) => {
   }
 };
 
-// Function to retrieve user-details  data after login
 export const getUserDetailsFn = async (email, password) => {
   try {
     console.log('Fetching details for email:', email);
@@ -70,7 +64,7 @@ export const getUserDetailsFn = async (email, password) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, password }),  // Send email and password in the request body
+      body: JSON.stringify({ email, password }),
     });
 
     if (!response.ok) {

@@ -4,14 +4,14 @@ import { loginUserFn, logoutUserFn, getUserDetailsFn } from '../services/LoginSe
 import globalStyles from '../styles';
 
 const HomeScreen = ({ navigation }) => {
-        const [userDetails, setUserDetails] = useState(null);  // State to store user details
+        const [userDetails, setUserDetails] = useState(null);
 
         useEffect(() => {
             const autoLogin = async () => {
                 try {
-                    // Define email and password inside the function
-                    const email = 'user@health.edu';  // Your email value
-                    const password = 'password';      // Your password value
+
+                    const email = 'user@health.edu';
+                    const password = 'password';
 
                     // Log the email and password to verify
                     console.log('Email:', email);
@@ -24,13 +24,13 @@ const HomeScreen = ({ navigation }) => {
                     // Fetch additional user details after successful login
                     const userData = await getUserDetailsFn(email, password);
                     console.log('User details fetched:', userData);
-                    setUserDetails(userData);  // Store user details in state
+                    setUserDetails(userData);
                 } catch (error) {
                     console.error('Error in auto-login:', error);
                 }
             };
 
-            autoLogin();  // Call auto-login when the component is mounted
+            autoLogin();
         }, []);
 
     const handleLogout = async () => {

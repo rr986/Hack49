@@ -19,7 +19,6 @@ export const getPatientDataFn = async (patientId) => {
   }
 };
 
-
 // Get all patients for a specific user using Firebase Cloud Functions
 export const getUserPatientsFn = async (userID) => {
   try {

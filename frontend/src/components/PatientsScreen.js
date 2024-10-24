@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Picker, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { getUserPatientsFn } from '../services/PatientDataStorage';
 import globalStyles from '../styles';
 
@@ -12,7 +13,6 @@ const PatientsScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchPatients = async () => {
       try {
-        // Fetch user patients from the database
         const data = await getUserPatientsFn('WmD4yXXhogKH6DbLRg70');
         setPatients(data || []);
         setFilteredPatients(data || []);
@@ -36,7 +36,7 @@ const PatientsScreen = ({ navigation }) => {
 
   // Navigate to the selected patient's detail screen
   const handlePatientSelect = (patientId) => {
-    navigation.navigate('PatientDetail', { patientId });
+    navigation.navigate('Patient Detail', { patientId });
   };
 
   return (

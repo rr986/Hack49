@@ -4,7 +4,7 @@ import { functions } from '../firebase';
 // Validate prescriptions
 export const validatePrescriptionInputFn = async ({ patientId, newPrescription }) => {
   try {
-    const response = await fetch('https://us-central1-your-project-id.cloudfunctions.net/validatePrescriptionInputFn', {
+    const response = await fetch('https://us-central1-ade-manager.cloudfunctions.net/validatePrescriptionInputFn', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -23,7 +23,7 @@ export const validatePrescriptionInputFn = async ({ patientId, newPrescription }
 // Customize prescription based on patient data
 export const customizePrescriptionFn = async ({ patientId, newPrescription }) => {
   try {
-    const response = await fetch('https://us-central1-your-project-id.cloudfunctions.net/customizePrescriptionFn', {
+    const response = await fetch('https://us-central1-ade-manager.cloudfunctions.net/customizePrescriptionFn', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ export const customizePrescriptionFn = async ({ patientId, newPrescription }) =>
 // Check polypharmacy risks
 export const checkPolypharmacyRisksFn = async ({ patientId, newPrescription }) => {
   try {
-    const response = await fetch('https://us-central1-your-project-id.cloudfunctions.net/checkPolypharmacyRisksFn', {
+    const response = await fetch('https://us-central1-ade-manager.cloudfunctions.net/checkPolypharmacyRisksFn', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ export const checkPolypharmacyRisksFn = async ({ patientId, newPrescription }) =
 // Retrieve prescriptions for a specific patient
 export const retrievePatientPrescriptionsFn = async (patientId) => {
   try {
-    const response = await fetch('https://us-central1-your-project-id.cloudfunctions.net/retrievePatientPrescriptionsFn', {
+    const response = await fetch('https://us-central1-ade-manager.cloudfunctions.net/retrievePatientPrescriptionsFn', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ export const retrievePatientPrescriptionsFn = async (patientId) => {
 // Add a prescription for a specific patient
 export const addPrescriptionFn = async (patientId, newPrescription) => {
   try {
-    const response = await fetch('https://us-central1-your-project-id.cloudfunctions.net/addPrescription', {
+    const response = await fetch('https://us-central1-ade-manager.cloudfunctions.net/addPrescriptionFn', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

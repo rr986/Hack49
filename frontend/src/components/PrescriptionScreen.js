@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { getUserPatientsFn, retrievePatientPrescriptionsFn, validatePrescriptionInputFn, customizePrescriptionFn, checkPolypharmacyRisksFn, addPrescriptionFn } from '../services/PrescriptionValidationService';
+import { getUserPatientsFn } from '../services/PatientDataStorage';
+import { retrievePatientPrescriptionsFn, validatePrescriptionInputFn, customizePrescriptionFn, checkPolypharmacyRisksFn, addPrescriptionFn } from '../services/PrescriptionValidationService';
 import globalStyles from '../styles';
 
 const PrescriptionScreen = () => {
@@ -16,11 +17,10 @@ const PrescriptionScreen = () => {
   const [customizedPrescription, setCustomizedPrescription] = useState(null);
 
   useEffect(() => {
-    // Fetch patients
     const fetchPatients = async () => {
       try {
-        const result = await getUserPatientsFn();
-        setPatients(result);
+        const data = await getUserPatientsFn('WmD4yXXhogKH6DbLRg70');
+        setPatients(data || []);
       } catch (error) {
         console.error('Error fetching patients', error);
       }

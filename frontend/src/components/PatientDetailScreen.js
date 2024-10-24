@@ -4,13 +4,12 @@ import { getPatientDataFn } from '../services/PatientDataStorage';
 import globalStyles from '../styles';
 
 const PatientDetailScreen = ({ route }) => {
-  const { patientId } = route.params;  // Retrieve the patientId from navigation
+  const { patientId } = route.params;
   const [patient, setPatient] = useState(null);
 
   useEffect(() => {
     const fetchPatientData = async () => {
       try {
-        // Fetch the patient data by ID
         const data = await getPatientDataFn(patientId);
         setPatient(data);
       } catch (error) {

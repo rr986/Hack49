@@ -7,7 +7,6 @@ import * as admin from 'firebase-admin';
 export const loginUser = functions.https.onRequest(async (req, res) => {
   console.log("Received data:", req.body);
 
-  // Ensure data is defined
   if (!req.body) {
     console.error('No data received in function.');
     return res.status(400).send('No data received.');
@@ -53,7 +52,7 @@ export const loginUser = functions.https.onRequest(async (req, res) => {
 //logout
 export const logoutUser = functions.https.onRequest(async (req, res) => {
   try {
-    const uid = req.body.uid;  // Assume the UID is passed in the request body
+    const uid = req.body.uid;
 
     if (!uid) {
       return res.status(401).send('User UID is not provided.');

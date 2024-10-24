@@ -1,4 +1,7 @@
-import { getNotificationsForUserFn } from '../services/NotificationService'; // Update import
+import { getNotificationsForUserFn } from '../services/NotificationsService';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Button, Alert, FlatList } from 'react-native';
+import globalStyles from '../styles';
 
 const NotificationsScreen = () => {
   const [notifications, setNotifications] = useState([]);
@@ -6,7 +9,7 @@ const NotificationsScreen = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const userID = 'WmD4yXXhogKH6DbLRg70';  // Replace with actual userID
+        const userID = 'WmD4yXXhogKH6DbLRg70';
         const fetchedNotifications = await getNotificationsForUserFn(userID);
 
         const notificationsArray = fetchedNotifications.Notifications.map((message, index) => ({

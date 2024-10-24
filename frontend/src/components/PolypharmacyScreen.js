@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, Alert, FlatList } from 'react-native';
-import { getUserPatientsFn, retrievePatientPrescriptionsFn, checkPolypharmacyRisksFn } from '../services/PrescriptionValidationService';
+import { getUserPatientsFn } from '../services/PatientDataStorage';
+import { Picker } from '@react-native-picker/picker';
+import {  retrievePatientPrescriptionsFn, checkPolypharmacyRisksFn } from '../services/PrescriptionValidationService';
 import globalStyles from '../styles';
 
 const PolypharmacyScreen = () => {
@@ -10,8 +12,8 @@ const PolypharmacyScreen = () => {
 
   useEffect(() => {
     const fetchPatients = async () => {
-      const result = await getUserPatientsFn();
-      setPatients(result);
+      const data = await getUserPatientsFn('WmD4yXXhogKH6DbLRg70');
+      setPatients(data || []);
     };
     fetchPatients();
   }, []);

@@ -26,7 +26,7 @@ async function getRxCUI(drugName) {
     }
   } catch (error) {
     console.error(`Error fetching RxCUI for drug ${drugName}:`, error);
-    throw error; // Re-throw to be handled in the main function
+    throw error;
   }
 }
 
@@ -35,7 +35,6 @@ export const checkDrugInteractions = functions.https.onRequest(async (req, res) 
   const { drugs } = req.body;
   console.log(`Received request to check interactions for drugs: ${JSON.stringify(drugs)}`);
 
-  // Input Validation
   if (!drugs || !Array.isArray(drugs) || drugs.length < 2) {
     console.warn('Insufficient number of drugs provided for interaction check.');
     return res.status(400).send({
