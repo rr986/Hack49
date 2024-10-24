@@ -3,6 +3,7 @@ import { View, Text, Button, TextInput, Alert } from 'react-native';
 import { checkDrugInteractionsFn } from '../services/DrugInteractionService';
 import globalStyles from '../styles';
 
+//Drug Interaction API not working
 const DrugInteractionScreen = () => {
   const [drug1, setDrug1] = useState('');
   const [drug2, setDrug2] = useState('');

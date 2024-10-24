@@ -8,7 +8,7 @@ import { checkDrugInteractions } from '../drugInteractions/index.js';
 
 // Initialize OpenAI configuration
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey: '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'
 });
 
 
