@@ -1,6 +1,7 @@
+# ADEManager
+
 Run on mac: 
 
-# ADEManager
 cd frontend
 
 npm install
