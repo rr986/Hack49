@@ -1,34 +1,10 @@
 import * as functions from 'firebase-functions';
 import fetch from 'node-fetch';
+import OpenAI from 'openai';
 
-// Helper function to get RxCUI for a drug name
-async function getRxCUI(drugName) {
-  try {
-    console.log(`Fetching RxCUI for drug: ${drugName}`);
-    const rxCuiUrl = `https://rxnav.nlm.nih.gov/REST/approximateTerm.json?term=${encodeURIComponent(drugName)}`;
-    const response = await fetch(rxCuiUrl);
-
-    if (!response.ok) {
-      console.error(`Failed to fetch RxCUI for ${drugName}. Status: ${response.status}`);
-      return null;
-    }
-
-    const data = await response.json();
-    console.log(`Received data for ${drugName}:`, JSON.stringify(data));
-
-    if (data.approximateGroup?.candidate?.length > 0) {
-      const rxcui = data.approximateGroup.candidate[0].rxcui;
-      console.log(`RxCUI for ${drugName}: ${rxcui}`);
-      return rxcui;
-    } else {
-      console.warn(`No RxCUI found for drug: ${drugName}`);
-      return null;
-    }
-  } catch (error) {
-    console.error(`Error fetching RxCUI for drug ${drugName}:`, error);
-    throw error;
-  }
-}
+const openai = new OpenAI({
+  apiKey: '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'
+});
 
 // Main function to check drug interactions
 export const checkDrugInteractions = functions.https.onRequest(async (req, res) => {
@@ -44,86 +20,25 @@ export const checkDrugInteractions = functions.https.onRequest(async (req, res) 
   }
 
   try {
-    // Step 1: Get RxCUIs for the provided drugs
-    const rxCuiPromises = drugs.map(drug => getRxCUI(drug));
-    const rxCuis = await Promise.all(rxCuiPromises);
-    console.log(`RxCUIs obtained: ${JSON.stringify(rxCuis)}`);
+    const prompt = `Please check for potential interactions between the following drugs: ${drugs.join(', ')}.`;
 
-    // Step 2: Filter out null values (drugs without RxCUI)
-    const validRxCuis = rxCuis.filter(rxcui => rxcui !== null);
-    console.log(`Valid RxCUIs: ${JSON.stringify(validRxCuis)}`);
+    // Call OpenAI API for interaction analysis
+    const response = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [{ role: 'user', content: prompt }],
+      max_tokens: 500,
+    });
 
-    if (validRxCuis.length < 2) {
-      console.warn('Not enough valid RxCUIs to check for interactions.');
-      return res.status(200).send({
-        hasInteraction: false,
-        message: 'Not enough valid drugs to check for interactions.',
-      });
-    }
+    const resultMessage = response.choices[0].message.content.trim();
 
-    // Step 3: Check interactions using the correct endpoint
-    const [rxcui1, rxcui2] = validRxCuis;
-    const interactionUrl = `https://rxnav.nlm.nih.gov/REST/interaction/list.json?rxcuis=${rxcui1},${rxcui2}`;
-    console.log(`Fetching interactions from URL: ${interactionUrl}`);
-    const interactionResponse = await fetch(interactionUrl);
+    // Assuming OpenAI provides details, parse for interaction details
+    const hasInteraction = resultMessage.includes('interaction');
+    const interactions = hasInteraction ? [{ description: resultMessage }] : [];
 
-    // Read the response as text
-    const interactionResponseText = await interactionResponse.text();
-    console.log(`Interaction response status: ${interactionResponse.status}`);
-    console.log(`Interaction response text: ${interactionResponseText}`);
-
-    let interactionData;
-    try {
-      interactionData = JSON.parse(interactionResponseText);
-    } catch (parseError) {
-      console.error('Error parsing interaction response JSON:', parseError);
-
-      // Handle specific non-JSON response indicating no interactions
-      if (interactionResponseText.trim().startsWith('No interactions are found')) {
-        console.log('No interactions found.');
-        return res.status(200).send({
-          hasInteraction: false,
-          message: 'No interactions found.',
-          interactions: [],
-        });
-      } else {
-        console.error('Unexpected response from interaction API.');
-        return res.status(500).send({
-          hasInteraction: false,
-          message: 'Error fetching interaction data. Please try again later.',
-        });
-      }
-    }
-
-    // Step 4: Check if interactionData contains interactions
-    let hasInteraction = false;
-    let interactionDetails = [];
-
-    if (
-      interactionData.fullInteractionTypeGroup &&
-      interactionData.fullInteractionTypeGroup.length > 0
-    ) {
-      hasInteraction = true;
-      interactionData.fullInteractionTypeGroup.forEach(group => {
-        group.fullInteractionType.forEach(type => {
-          type.interactionPair.forEach(pair => {
-            interactionDetails.push({
-              source: group.sourceName,
-              description: pair.description,
-              severity: pair.severity,
-            });
-          });
-        });
-      });
-    } else {
-      console.log('No interactions found in interactionData.');
-    }
-
-    console.log(`Interaction check result: hasInteraction=${hasInteraction}`);
     return res.status(200).send({
       hasInteraction,
       message: hasInteraction ? 'Interactions found.' : 'No interactions found.',
-      interactions: interactionDetails,
+      interactions,
     });
   } catch (error) {
     console.error('Error fetching drug interaction data:', error);
