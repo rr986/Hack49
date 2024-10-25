@@ -3,6 +3,7 @@ import fetch from 'node-fetch';
 import OpenAI from 'openai';
 
 const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 // Main function to check drug interactions
